@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "setup": "node scripts/setup.js",
     "build": "npm --prefix frontend run build",
     "dev": "concurrently \"nodemon server.js\" \"npm --prefix frontend run dev\"",
     "start": "cross-env NODE_ENV=production node server.js",
