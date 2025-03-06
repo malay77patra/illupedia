@@ -6,7 +6,7 @@ const router = Router();
 const userRoutes = require("./user");
 
 // Registering
-router.use("/api/v1", userRoutes);
+router.use("/api", userRoutes);
 
 
 module.exports = router;

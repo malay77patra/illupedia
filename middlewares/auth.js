@@ -8,28 +8,29 @@ const verifyJWT = async (req, res, next) => {
             req.header("Authorization")?.replace("Bearer ", "");
 
         if (!token) {
-            return res.status(401).json({ message: "Unauthorized access blocked" });
+            return res.status(401).json({ message: "Token Not Provided", refresh: true });
         }
 
         let decodedToken;
         try {
             decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         } catch (error) {
-            console.error("JWT Verification Error:", error);
 
             if (error.name === "TokenExpiredError") {
-                return res.status(401).json({ message: "Token expired", tokenExpired: true });
+                return res.status(401).json({ message: "Token Expired", refresh: true });
             }
             if (error.name === "JsonWebTokenError" || error.name === "NotBeforeError") {
-                return res.status(403).json({ message: "Unauthorized access blocked" });
+                return res.status(403).json({ message: "Invalid Token", login: true });
             }
+
+            console.error("JWT Verification Error:", error);
             return res.status(500).json({ message: "Unable to verify user, please try again later" });
         }
 
         const user = await User.findById(decodedToken?._id).select("-password -refreshToken");
 
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({ message: "User not found", login: true });
         }
 
         req.user = user;

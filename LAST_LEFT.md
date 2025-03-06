@@ -1,0 +1,2 @@
+after i log out , i can still access the protected resources with the previous access token.
+Logout invalidate sthe refresh token but doesnt the access token. find a way to fix it, or is it even an issue ? dont know.
