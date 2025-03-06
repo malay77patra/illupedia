@@ -16,7 +16,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8000;
 
-// Adding middleware for CORS, JSON parsing, and cookies
+// Adding middlewares
 app.use(
     cors({
         origin: process.env.CLIENT_URL,

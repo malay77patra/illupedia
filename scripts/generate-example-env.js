@@ -24,7 +24,7 @@ console.log(CYAN + BOLD + `
 ` + RESET);
 
 // Watermark
-console.log(DIM + "by Malay Patra (⌐■_■)" + RESET + "\n");
+console.log(DIM + "by Malay Patra ฅ≽^•⩊•^≼ฅ" + RESET + "\n");
 
 if (!fs.existsSync(envPath)) {
     console.log(RED + BOLD + "❌ No .env file found!" + RESET);
