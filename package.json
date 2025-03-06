@@ -1,7 +1,7 @@
 {
   "type": "commonjs",
   "scripts": {
-    "setup": "node scripts/setup.js",
+    "tenv": "node scripts/generate-example-env.js",
     "build": "npm --prefix frontend run build",
     "dev": "concurrently \"cross-env NODE_ENV=development nodemon server.js\" \"npm --prefix frontend run dev\"",
     "start": "node server.js",
@@ -12,11 +12,13 @@
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "chalk": "^4.1.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "figlet": "^1.8.0",
     "jsonwebtoken": "^9.0.2",
     "module-alias": "^2.2.3",
     "mongoose": "^8.12.1"

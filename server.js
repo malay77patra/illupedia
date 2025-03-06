@@ -6,13 +6,13 @@ const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const connectDB = require("@db/connect");
 const path = require("path");
+const routes = require("@routes");
 
 
 // Environment variables
 dotenv.config();
 
 // Definations
-const routes = require("@routes");
 const app = express();
 const PORT = process.env.PORT || 8000;
 
@@ -29,6 +29,7 @@ app.use(cookieParser());
 
 // Registering routes
 app.use(routes);
+
 
 // routing handler for SPA in production
 if (process.env.NODE_ENV !== "development") {

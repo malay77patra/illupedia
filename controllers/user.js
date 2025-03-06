@@ -1,4 +1,4 @@
-const User = require("@models/user.model.js");
+const User = require("@models/user");
 
 const registerUser = async (req, res) => {
     const { email, password } = req.body;
