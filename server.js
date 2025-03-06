@@ -5,6 +5,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const connectDB = require("@db/connect");
+const path = require("path");
 
 
 // Environment variables
@@ -29,6 +30,20 @@ app.use(cookieParser());
 // Registering routes
 app.use(routes);
 
+// routing handler for SPA in production
+// if (process.env.NODE_ENV === "production") {
+//     app.use(express.static(path.resolve(__dirname, "frontend", "dist")));
+//     //
+//     // fallback
+//     //
+//     app.get('*', (req, res) => {
+//         res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+//     });
+// }
+app.use(express.static(path.resolve(__dirname, "frontend", "dist")));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+});
 
 // Connecting to MongoDB and starting the server
 connectDB()
