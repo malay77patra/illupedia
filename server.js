@@ -6,13 +6,12 @@ const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const connectDB = require("@db/connect");
 
-// Routes
-const userRouter = require("@routes/user.routes");
 
 // Environment variables
 dotenv.config();
 
 // Definations
+const routes = require("@routes");
 const app = express();
 const PORT = process.env.PORT || 8000;
 
@@ -28,12 +27,8 @@ app.use(urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Registering routes
-app.use("/api/v1/users", userRouter);
+app.use(routes);
 
-// test 
-app.get("/api/v1", (req, res) => {
-    res.send("Hello World");
-});
 
 // Connecting to MongoDB and starting the server
 connectDB()
