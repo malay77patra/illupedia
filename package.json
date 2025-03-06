@@ -3,12 +3,12 @@
   "scripts": {
     "setup": "node scripts/setup.js",
     "build": "npm --prefix frontend run build",
-    "dev": "concurrently \"nodemon server.js\" \"npm --prefix frontend run dev\"",
-    "start": "cross-env NODE_ENV=production node server.js",
+    "dev": "concurrently \"cross-env NODE_ENV=development nodemon server.js\" \"npm --prefix frontend run dev\"",
+    "start": "node server.js",
     "dev:f": "npm --prefix frontend run dev",
-    "dev:b": "nodemon server.js",
+    "dev:b": "cross-env NODE_ENV=development nodemon server.js",
     "start:f": "npm --prefix frontend run preview",
-    "start:b": "cross-env NODE_ENV=production node server.js"
+    "start:b": "node server.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
