@@ -10,7 +10,7 @@ if (fs.existsSync(envPath)) {
     const exampleEnvContent = envContent
         .split('\n')
         .map(line => {
-            if (line.trim() && !line.startsWith('#')) {
+            if (line.trim()) {
                 const [key] = line.split('=');
                 return `${key}=`;
             }
