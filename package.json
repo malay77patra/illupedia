@@ -1,4 +1,5 @@
 {
+  "type": "commonjs",
   "scripts": {
     "setup": "node scripts/setup.js",
     "build": "npm --prefix frontend run build",
@@ -7,10 +8,28 @@
     "dev:f": "npm --prefix frontend run dev",
     "dev:b": "nodemon server.js",
     "start:f": "npm --prefix frontend run preview",
-    "start:b": "node server.js"
+    "start:b": "cross-env NODE_ENV=production node server.js"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "cross-env": "^7.0.3",
-    "express": "^4.21.2"
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "module-alias": "^2.2.3",
+    "mongoose": "^8.12.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "_moduleAliases": {
+    "@root": ".",
+    "@db": "./db",
+    "@models": "./db/models",
+    "@routes": "./routes",
+    "@controllers": "./controllers",
+    "@middlewares": "./middlewares"
   }
 }
