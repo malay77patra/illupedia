@@ -1,22 +1,9 @@
 import { useEffect, useState } from "react";
 
-export default function ThemeBtn() {
-    const getInitialTheme = () => {
-        if (localStorage.getItem("theme")) {
-            return localStorage.getItem("theme");
-        }
-        return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    };
-
-    const [theme, setTheme] = useState(getInitialTheme());
-
-    useEffect(() => {
-        document.documentElement.classList.toggle("dark", theme === "dark");
-        localStorage.setItem("theme", theme);
-    }, [theme]);
+export default function ThemeTgl({ theme, setTheme }) {
 
     return (
-        <div className="theme-toggle cursor-pointer" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+        <div className="theme-toggle" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className={theme === "dark" ? "active" : ""}>
                 <clipPath id="theme-toggle-clip">
                     <path d="M0-11h25a1 1 0 0017 13v30H0Z" />
