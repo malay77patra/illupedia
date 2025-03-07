@@ -4,10 +4,16 @@ module.exports = {
     theme: {
         extend: {
             colors: {
+                background: 'var(--color-background)',
+                surface: 'var(--color-surface)',
                 accent: 'var(--color-accent)',
+                secondary: 'var(--color-secondary)',
+                text: 'var(--color-text)',
+                muted: 'var(--color-muted)',
+                border: 'var(--color-border)',
             },
             fontFamily: {
-                libertine: ['LinLibertine', 'serif'],
+                acadian: ['Acadian', 'sans-serif'],
             },
         },
     },

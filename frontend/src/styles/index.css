@@ -2,18 +2,47 @@
 @config "../../tailwind.config.js";
 
 
-/* Custom Themes */
+/* -------------------------------------- Themes -------------------------------------- */
+
+/* Light Mode */
 :root {
-    --color-accent: #030012;
+    --color-background: #f9f5ff;
+    --color-surface: #ffffff;
+    --color-accent: #5b42f3;
+    --color-secondary: #d6b1ff;
+    --color-text: #1a1a2e;
+    --color-muted: #858585;
+    --color-border: #ddd6f3;
 }
 
+/* Dark Mode */
 .dark {
-    --color-accent: #c6b1ff;
+    --color-background: #13111a;
+    --color-surface: #1c1a27;
+    --color-accent: #9a8cff;
+    --color-secondary: #5c5470;
+    --color-text: #f4f1ff;
+    --color-muted: #8c849c;
+    --color-border: #2a2733;
 }
+
+/* -------------------------------------- Themes -------------------------------------- */
+
+/* -------------------------------------- Fonts -------------------------------------- */
 
 @font-face {
-    font-family: 'LinLibertine';
-    src: url('/src/assets/fonts/LinLibertine.ttf') format('ttf');
+    font-family: 'Acadian';
+    src: url('/src/assets/fonts/Acadian.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
+
+/* -------------------------------------- Fonts -------------------------------------- */
+
+/* -------------------------------------- Body -------------------------------------- */
+
+body {
+    @apply bg-background text-text m-0 p-0;
+}
+
+/* -------------------------------------- Body -------------------------------------- */
