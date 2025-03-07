@@ -1,1 +1,19 @@
 @import "tailwindcss";
+@config "../../tailwind.config.js";
+
+
+/* Custom Themes */
+:root {
+    --color-accent: #030012;
+}
+
+.dark {
+    --color-accent: #c6b1ff;
+}
+
+@font-face {
+    font-family: 'LinLibertine';
+    src: url('/src/assets/fonts/LinLibertine.ttf') format('ttf');
+    font-weight: normal;
+    font-style: normal;
+}

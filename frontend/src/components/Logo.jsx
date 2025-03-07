@@ -10,7 +10,6 @@ export default function Logo({ size = "small" }) {
     return (
         <img
             src="illulogo.svg"
-            className="business-logo"
             style={{ width: logoSize, height: logoSize }}
         />
     );
