@@ -27,7 +27,7 @@ const registerUser = async (req, res) => {
 
         return res
             .status(201)
-            .json({ message: "User created successfully", login: true });
+            .json({ message: "User created successfully", action: "login" });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Something went wrong, please try again later" });
@@ -110,7 +110,7 @@ const refreshAccessToken = async (req, res) => {
     const incomingRefreshToken = req.cookies.refreshToken;
 
     if (!incomingRefreshToken) {
-        return res.status(401).json({ message: "Refresh token not found", login: true });
+        return res.status(401).json({ message: "Refresh token not found", action: "login" });
     }
 
     try {
@@ -122,11 +122,11 @@ const refreshAccessToken = async (req, res) => {
         const user = await User.findById(decodedToken?._id);
 
         if (!user) {
-            return res.status(404).json({ message: "User not found", login: true });
+            return res.status(404).json({ message: "User not found", action: "login" });
         }
 
         if (user?.refreshToken !== incomingRefreshToken) {
-            return res.status(401).json({ message: "Refresh token is incorrect", login: true });
+            return res.status(401).json({ message: "Refresh token is invalid", action: "login" });
         }
 
         const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(

@@ -3,12 +3,10 @@ const User = require("@models/user");
 
 const verifyJWT = async (req, res, next) => {
     try {
-        const token =
-            req.cookies?.accessToken ||
-            req.header("Authorization")?.replace("Bearer ", "");
+        const token = req.header("Authorization")?.replace("Bearer ", "");
 
         if (!token) {
-            return res.status(401).json({ message: "Token Not Provided", refresh: true });
+            return res.status(401).json({ message: "Token Not Provided", action: "refresh" });
         }
 
         let decodedToken;
@@ -17,10 +15,10 @@ const verifyJWT = async (req, res, next) => {
         } catch (error) {
 
             if (error.name === "TokenExpiredError") {
-                return res.status(401).json({ message: "Token Expired", refresh: true });
+                return res.status(401).json({ message: "Token Expired", action: "refresh" });
             }
             if (error.name === "JsonWebTokenError" || error.name === "NotBeforeError") {
-                return res.status(403).json({ message: "Invalid Token", login: true });
+                return res.status(403).json({ message: "Invalid Token", action: "refresh" });
             }
 
             console.error("JWT Verification Error:", error);
@@ -30,7 +28,7 @@ const verifyJWT = async (req, res, next) => {
         const user = await User.findById(decodedToken?._id).select("-password -refreshToken");
 
         if (!user) {
-            return res.status(404).json({ message: "User not found", login: true });
+            return res.status(404).json({ message: "User not found", action: "login" });
         }
 
         req.user = user;
