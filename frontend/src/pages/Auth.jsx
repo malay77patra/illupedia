@@ -7,8 +7,10 @@ const Test = () => {
 
     const fetchData = async () => {
         try {
-            const response = await fetch("https://illupedia.onrender.com");
-            const result = await response.json();
+            const response = await fetch("https://illupedia.onrender.com", {
+                credentials: 'include'
+            });
+            const result = await response.text();
             setData(result);
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -18,7 +20,7 @@ const Test = () => {
     return (
         <div>
             <Button onClick={fetchData}>Fetch Data</Button>
-            {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
+            {data && <pre>{data}</pre>}
         </div>
     );
 };
