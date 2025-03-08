@@ -13,7 +13,7 @@ export default function Auth() {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
 
-            restxt = await response.text();
+            const restxt = await response.text();
             toast.success(restxt);
         } catch (err) {
             console.error("Fetch error:", err);
