@@ -2,26 +2,26 @@
     "compilerOptions": {
         "baseUrl": "./",
         "paths": {
+            "@assets/*": [
+                "src/assets/*"
+            ],
             "@components/*": [
                 "src/components/*"
-            ],
-            "@pages/*": [
-                "src/pages/*"
-            ],
-            "@hooks/*": [
-                "src/hooks/*"
             ],
             "@contexts/*": [
                 "src/contexts/*"
             ],
-            "@utils/*": [
-                "src/utils/*"
+            "@hooks/*": [
+                "src/hooks/*"
+            ],
+            "@pages/*": [
+                "src/pages/*"
             ],
             "@styles/*": [
                 "src/styles/*"
             ],
-            "@assets/*": [
-                "src/assets/*"
+            "@utils/*": [
+                "src/utils/*"
             ]
         }
     }

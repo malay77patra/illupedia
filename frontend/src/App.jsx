@@ -14,7 +14,6 @@ export default function App() {
       <SiteLayout>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/auth" element={<Auth />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Routes >
       </SiteLayout>

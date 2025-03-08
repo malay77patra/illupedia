@@ -7,13 +7,13 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      "@components": resolve(__dirname, "src/components"),
-      "@pages": resolve(__dirname, "src/pages"),
-      "@hooks": resolve(__dirname, "src/hooks"),
-      "@contexts": resolve(__dirname, "src/contexts"),
-      "@utils": resolve(__dirname, "src/utils"),
-      "@styles": resolve(__dirname, "src/styles"),
       "@assets": resolve(__dirname, "src/assets"),
+      "@components": resolve(__dirname, "src/components"),
+      "@contexts": resolve(__dirname, "src/contexts"),
+      "@hooks": resolve(__dirname, "src/hooks"),
+      "@pages": resolve(__dirname, "src/pages"),
+      "@styles": resolve(__dirname, "src/styles"),
+      "@utils": resolve(__dirname, "src/utils"),
     },
   }
 })
