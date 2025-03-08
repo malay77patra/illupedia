@@ -6,8 +6,7 @@ import toast from 'react-hot-toast';
 export default function Auth() {
     return (
         <div>
-            <h1>Login</h1>
-            <Button onClick={() => toast.success('Successfully toasted!')}>Info</Button>
+            <Button onClick={() => toast.success('Successfully notified!')}>Notify</Button>
         </div>
     )
 }

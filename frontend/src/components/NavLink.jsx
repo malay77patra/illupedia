@@ -1,9 +1,14 @@
-import { Link } from "react-router-dom"
+import { NavLink as NVLink } from "react-router-dom";
 
 export default function NavLink({ children, to = "#" }) {
     return (
         <>
-            <Link to={to}>{children}</Link>
+            <NVLink
+                to={to}
+                className={({ isActive }) =>
+                    `${isActive ? "text-accent" : "hover:text-accent"}`
+                }
+            >{children}</NVLink>
         </>
     )
 }
