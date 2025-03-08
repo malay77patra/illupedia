@@ -2,34 +2,29 @@ import React, { useState } from "react";
 import Button from "@components/Button";
 import toast from 'react-hot-toast';
 
-const Test = () => {
-    const [data, setData] = useState(null);
+
+export default function Auth() {
 
     const fetchData = async () => {
         try {
-            const response = await fetch("https://illupedia.onrender.com", {
-                credentials: 'include'
-            });
-            const result = await response.text();
-            setData(result);
-        } catch (error) {
-            console.error("Error fetching data:", error);
+            const response = await fetch("https://illupedia.onrender.com", { credentials: "include" });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            restxt = await response.text();
+            toast.success(restxt);
+        } catch (err) {
+            console.error("Fetch error:", err);
+            toast.error(`${err.message || "Something went wrong"}`);
         }
     };
 
-    return (
-        <div>
-            <Button onClick={fetchData}>Fetch Data</Button>
-            {data && <pre>{data}</pre>}
-        </div>
-    );
-};
 
-export default function Auth() {
     return (
         <div>
-            <Button onClick={() => toast.success('Successfully notified!')}>Notify</Button>
-            <Test />
+            <Button onClick={() => fetchData()}>Check Server</Button>
         </div>
     );
 }
