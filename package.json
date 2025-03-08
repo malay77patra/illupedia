@@ -1,7 +1,7 @@
 {
   "type": "commonjs",
   "scripts": {
-    "build": "echo 'Building... This may take a year. Just kidding •ᴗ• there's nothing to build! 🚀'",
+    "build": "echo 'Building... This may take a year. Just kidding •ᴗ• all done! 🚀'",
     "dev": "concurrently \"cross-env NODE_ENV=development nodemon server.js\" \"npm --prefix frontend run dev\"",
     "start": "node server.js",
     "build:f": "npm --prefix frontend run build",
