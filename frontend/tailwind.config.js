@@ -15,6 +15,9 @@ module.exports = {
             fontFamily: {
                 acadian: ['Acadian', 'sans-serif'],
             },
+            opacity: {
+                'active': '0.9',
+            },
         },
     },
     plugins: [],

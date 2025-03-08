@@ -1,14 +1,12 @@
 {
   "type": "commonjs",
   "scripts": {
-    "tenv": "node scripts/generate-example-env.js",
-    "build": "npm --prefix frontend run build",
+    "build": "echo 'Building... This may take a year. Just kidding •ᴗ• there's nothing to build! 🚀'",
     "dev": "concurrently \"cross-env NODE_ENV=development nodemon server.js\" \"npm --prefix frontend run dev\"",
-    "start": "node server.js",
-    "dev:f": "npm --prefix frontend run dev",
-    "dev:b": "cross-env NODE_ENV=development nodemon server.js",
-    "start:f": "npm --prefix frontend run preview",
-    "start:b": "node server.js"
+    "start": "concurrently \"node server.js\" \"npm --prefix frontend run preview\"",
+    "build:f": "npm --prefix frontend run build",
+    "tenv": "node scripts/generate-example-env.js",
+    "dev:b": "cross-env NODE_ENV=development nodemon server.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

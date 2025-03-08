@@ -9,14 +9,14 @@ const path = require("path");
 const routes = require("@routes");
 
 
-// Environment variables
+// Load environment variables
 dotenv.config();
 
 // Definations
 const app = express();
 const PORT = process.env.PORT || 8000;
 
-// Adding middlewares
+// Using middlewares
 app.use(
     cors({
         origin: process.env.CLIENT_URL,
@@ -26,20 +26,15 @@ app.use(
 app.use(express.json());
 app.use(urlencoded({ extended: true }));
 app.use(cookieParser());
-
-// Registering routes
 app.use(routes);
 
+// Test route
+app.get("/", (req, res) => {
+    res.status(200).send("Server Online!");
+});
 
-// routing handler for SPA in production
-if (process.env.NODE_ENV !== "development") {
-    app.use(express.static(path.resolve(__dirname, "frontend", "dist")));
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
-    });
-}
 
-// Connecting to MongoDB and starting the server
+// Connecting to MongoDB, then start the server
 connectDB()
     .then(() => {
         app.listen(PORT, () => {
