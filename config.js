@@ -1,9 +1,9 @@
-const HTTP_ONLY_OPTIONS = {
-    httpOnly: true,
-    secure: true, // Enable in a production environment with HTTPS
-};
+
+const MAX_REFRESH_TOKEN_AGE = 1000 * 60 * 60 * 24 * 30; // 30 days
+
+
 
 
 module.exports = {
-    HTTP_ONLY_OPTIONS,
+    MAX_REFRESH_TOKEN_AGE,
 };

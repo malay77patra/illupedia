@@ -1,5 +1,6 @@
 const User = require("@models/user");
-const { HTTP_ONLY_OPTIONS } = require("@config");
+const jwt = require("jsonwebtoken");
+const { MAX_REFRESH_TOKEN_AGE } = require("@config");
 
 const registerUser = async (req, res) => {
     const { email, password } = req.body;
@@ -78,12 +79,18 @@ const loginUser = async (req, res) => {
             "-password -refreshToken"
         );
 
+        // Set refresh token as http-Only with expiry time
         return res
             .status(200)
-            .cookie("refreshToken", refreshToken, HTTP_ONLY_OPTIONS)
+            .cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                sameSite: "None",
+                secure: true,
+                maxAge: MAX_REFRESH_TOKEN_AGE
+            })
             .json({
                 accessToken,
-                message: "Logged in successfully",
+                message: "Logged in successfully"
             });
     } catch (error) {
         console.log(error);
@@ -102,7 +109,12 @@ const logoutUser = async (req, res) => {
 
     return res
         .status(200)
-        .cookie("refreshToken", "", HTTP_ONLY_OPTIONS)
+        .cookie("refreshToken", "", {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: MAX_REFRESH_TOKEN_AGE
+        })
         .json({ message: "Logged out successfully" });
 };
 
@@ -136,7 +148,12 @@ const refreshAccessToken = async (req, res) => {
         // Set the new tokens in cookies
         return res
             .status(200)
-            .cookie("refreshToken", refreshToken, HTTP_ONLY_OPTIONS)
+            .cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                sameSite: "None",
+                secure: true,
+                maxAge: MAX_REFRESH_TOKEN_AGE
+            })
             .json({ accessToken, message: "Access token refreshed" });
     } catch (error) {
         console.log(error);

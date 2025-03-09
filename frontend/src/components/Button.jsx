@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function Button({ type, onClick, children }) {
-    return <button className="cursor-pointer font-medium rounded-lg text-sm px-5 py-2.5 bg-accent active:opacity-active text-white" type={type} onClick={onClick}>{children}</button>;
+export default function Button({ children, ...props }) {
+    return <button className="cursor-pointer font-medium rounded-lg text-sm px-5 py-2.5 bg-accent active:opacity-active disabled:opacity-disabled text-white" {...props}>{children}</button>;
 }

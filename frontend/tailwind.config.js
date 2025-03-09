@@ -17,6 +17,7 @@ module.exports = {
             },
             opacity: {
                 'active': '0.9',
+                'disabled': '0.6'
             },
         },
     },
