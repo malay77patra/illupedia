@@ -6,7 +6,7 @@ const verifyJWT = async (req, res, next) => {
         const token = req.header("Authorization")?.replace("Bearer ", "");
 
         if (!token) {
-            return res.status(401).json({ message: "Token Not Provided"});
+            return res.status(401).json({ message: "Unauthorized request blocked." });
         }
 
         let decodedToken;
@@ -15,27 +15,27 @@ const verifyJWT = async (req, res, next) => {
         } catch (error) {
 
             if (error.name === "TokenExpiredError") {
-                return res.status(401).json({ message: "Token Expired"});
+                return res.status(401).json({ message: "Session expired, please login again." });
             }
             if (error.name === "JsonWebTokenError" || error.name === "NotBeforeError") {
-                return res.status(403).json({ message: "Invalid Token"});
+                return res.status(403).json({ message: "Unauthorized request blocked." });
             }
 
             console.error("JWT Verification Error:", error);
-            return res.status(500).json({ message: "Unable to verify user, please try again later" });
+            return res.status(500).json({ message: "Unable to verify user, please try again later." });
         }
 
         const user = await User.findById(decodedToken?._id).select("-password -refreshToken");
 
         if (!user) {
-            return res.status(404).json({ message: "User not found"});
+            return res.status(404).json({ message: "User not found." });
         }
 
         req.user = user;
         next();
     } catch (error) {
         console.error("Unexpected JWT Verification Error:", error);
-        return res.status(500).json({ message: "Unable to verify user, please try again later" });
+        return res.status(500).json({ message: "Unable to verify user, please try again later." });
     }
 };
 
