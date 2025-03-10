@@ -30,6 +30,7 @@
     "@routes": "./routes",
     "@controllers": "./controllers",
     "@middlewares": "./middlewares",
-    "@config": "./config"
+    "@config": "./config",
+    "@utils": "./utils"
   }
 }

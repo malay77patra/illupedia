@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const { MAX_ACCESS_TOKEN_AGE, MAX_REFRESH_TOKEN_AGE } = require("@config");
+const { getJwtFormat } = require("@utils");
+
 
 const userSchema = new Schema(
     {
@@ -43,7 +46,7 @@ userSchema.methods.generateAccessToken = function () {
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
-            expiresIn: "15m",
+            expiresIn: getJwtFormat(MAX_ACCESS_TOKEN_AGE),
         }
     );
 };
@@ -56,7 +59,7 @@ userSchema.methods.generateRefreshToken = function () {
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
-            expiresIn: "15d",
+            expiresIn: getJwtFormat(MAX_REFRESH_TOKEN_AGE),
         }
     );
 };

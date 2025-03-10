@@ -6,7 +6,7 @@ const verifyJWT = async (req, res, next) => {
         const token = req.header("Authorization")?.replace("Bearer ", "");
 
         if (!token) {
-            return res.status(401).json({ message: "Token Not Provided", action: "refresh" });
+            return res.status(401).json({ message: "Token Not Provided"});
         }
 
         let decodedToken;
@@ -15,10 +15,10 @@ const verifyJWT = async (req, res, next) => {
         } catch (error) {
 
             if (error.name === "TokenExpiredError") {
-                return res.status(401).json({ message: "Token Expired", action: "refresh" });
+                return res.status(401).json({ message: "Token Expired"});
             }
             if (error.name === "JsonWebTokenError" || error.name === "NotBeforeError") {
-                return res.status(403).json({ message: "Invalid Token", action: "refresh" });
+                return res.status(403).json({ message: "Invalid Token"});
             }
 
             console.error("JWT Verification Error:", error);
@@ -28,7 +28,7 @@ const verifyJWT = async (req, res, next) => {
         const user = await User.findById(decodedToken?._id).select("-password -refreshToken");
 
         if (!user) {
-            return res.status(404).json({ message: "User not found", action: "login" });
+            return res.status(404).json({ message: "User not found"});
         }
 
         req.user = user;

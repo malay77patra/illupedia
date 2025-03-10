@@ -17,15 +17,11 @@ const AuthProvider = ({ children }) => {
                         withCredentials: true,
                         validateStatus: (status) => true,
                     });
-                if (resp.data.action === "login") {
-                    return;
-                } else {
-                    setAccessToken(resp.data.accessToken);
-                }
+                setAccessToken(resp.data.accessToken);
             } catch (err) {
                 console.log("Error:", err)
             } finally {
-                setLoading(false);w
+                setLoading(false);
             }
 
         };

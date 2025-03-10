@@ -1,6 +1,6 @@
 const User = require("@models/user");
 const jwt = require("jsonwebtoken");
-const { MAX_REFRESH_TOKEN_AGE } = require("@config");
+const { ACCESS_TOKEN_OPTIONS } = require("@config");
 
 const registerUser = async (req, res) => {
     const { email, password } = req.body;
@@ -28,7 +28,7 @@ const registerUser = async (req, res) => {
 
         return res
             .status(201)
-            .json({ message: "User created successfully", action: "login" });
+            .json({ message: "User created successfully" });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Something went wrong, please try again later" });
@@ -82,12 +82,7 @@ const loginUser = async (req, res) => {
         // Set refresh token as http-Only with expiry time
         return res
             .status(200)
-            .cookie("refreshToken", refreshToken, {
-                httpOnly: true,
-                sameSite: "None",
-                secure: true,
-                maxAge: MAX_REFRESH_TOKEN_AGE
-            })
+            .cookie("refreshToken", refreshToken, ACCESS_TOKEN_OPTIONS)
             .json({
                 accessToken,
                 message: "Logged in successfully"
@@ -109,12 +104,7 @@ const logoutUser = async (req, res) => {
 
     return res
         .status(200)
-        .cookie("refreshToken", "", {
-            httpOnly: true,
-            sameSite: "None",
-            secure: true,
-            maxAge: MAX_REFRESH_TOKEN_AGE
-        })
+        .cookie("refreshToken", "", ACCESS_TOKEN_OPTIONS)
         .json({ message: "Logged out successfully" });
 };
 
@@ -122,7 +112,7 @@ const refreshAccessToken = async (req, res) => {
     const incomingRefreshToken = req.cookies.refreshToken;
 
     if (!incomingRefreshToken) {
-        return res.status(401).json({ message: "Refresh token not found", action: "login" });
+        return res.status(401).json({ message: "Refresh token not found" });
     }
 
     try {
@@ -134,11 +124,11 @@ const refreshAccessToken = async (req, res) => {
         const user = await User.findById(decodedToken?._id);
 
         if (!user) {
-            return res.status(404).json({ message: "User not found", action: "login" });
+            return res.status(404).json({ message: "User not found" });
         }
 
         if (user?.refreshToken !== incomingRefreshToken) {
-            return res.status(401).json({ message: "Refresh token is invalid", action: "login" });
+            return res.status(401).json({ message: "Refresh token is invalid" });
         }
 
         const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
@@ -148,12 +138,7 @@ const refreshAccessToken = async (req, res) => {
         // Set the new tokens in cookies
         return res
             .status(200)
-            .cookie("refreshToken", refreshToken, {
-                httpOnly: true,
-                sameSite: "None",
-                secure: true,
-                maxAge: MAX_REFRESH_TOKEN_AGE
-            })
+            .cookie("refreshToken", refreshToken, ACCESS_TOKEN_OPTIONS)
             .json({ accessToken, message: "Access token refreshed" });
     } catch (error) {
         console.log(error);
