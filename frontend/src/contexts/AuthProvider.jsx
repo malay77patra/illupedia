@@ -11,13 +11,13 @@ const AuthProvider = ({ children }) => {
     useEffect(() => {
         const refreshToken = async () => {
             try {
-                const resp = await axios.post("http://127.0.0.1:8000/api/user/refresh-token",
+                const resp = await axios.post("https://illupedia.onrender.com",
                     {},
                     {
                         withCredentials: true,
                         validateStatus: (status) => true,
                     });
-                setAccessToken(resp.data.accessToken);
+                // setAccessToken(resp.data.accessToken);
             } catch (err) {
                 console.log("Error:", err)
             } finally {
