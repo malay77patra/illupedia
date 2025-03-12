@@ -33,7 +33,7 @@ export default function Auth({ setAccessToken }) {
             const response = await axios.post(
                 `${import.meta.env.VITE_SERVER_URL}/api/user/${endpoint}`,
                 payload,
-                { withCredentials: true } // Ensures cookies are sent/received
+                { withCredentials: true }
             );
 
             setAccessToken(response.data.accessToken);
@@ -91,7 +91,7 @@ export default function Auth({ setAccessToken }) {
                 />
             )}
 
-            <Button onClick={handleSubmit} disabled={loading}>
+            <Button onClick={handleSubmit} disabled={loading} fullwidth>
                 {loading ? (isLogin ? "Logging in..." : "Registering...") : (isLogin ? "Login" : "Register")}
             </Button>
 

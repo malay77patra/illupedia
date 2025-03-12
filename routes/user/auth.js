@@ -4,13 +4,16 @@ const { verifyJWT } = require("@middlewares/auth");
 
 const router = Router();
 
-// public routes
+// ---------------------- Public Routes ----------------------
+
 router.route("/register").post(registerUser);
 router.route("/login").post(loginUser);
+router.post("/refresh-token", refreshAccessToken);
 
-// protected routes
-router.route("/logout").post(verifyJWT, logoutUser);
-router.route("/refresh-token").post(refreshAccessToken);
+// ---------------------- Protected Routes ----------------------
+router.use(verifyJWT);
+router.post("/logout", logoutUser);
+
 
 
 module.exports = router;

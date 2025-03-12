@@ -35,22 +35,6 @@ const registerUser = async (req, res) => {
     }
 };
 
-// const generateAccessAndRefreshTokens = async (userId) => {
-//     try {
-//         const user = await User.findById(userId);
-
-//         const accessToken = user.generateAccessToken();
-//         const refreshToken = user.generateRefreshToken();
-
-//         user.refreshToken = refreshToken;
-//         await user.save({ validateBeforeSave: false });
-
-//         return { accessToken, refreshToken };
-//     } catch (error) {
-//         throw new Error(error.message);
-//     }
-// };
-
 
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
@@ -72,9 +56,6 @@ const loginUser = async (req, res) => {
             return res.status(401).json({ message: "Incorrect password." });
         }
 
-        // const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-        //     user._id
-        // );
         const accessToken = user.generateAccessToken();
         const refreshToken = user.generateRefreshToken();
 
@@ -140,9 +121,6 @@ const refreshAccessToken = async (req, res) => {
             return res.status(401).json({ message: "Invalid refresh token." });
         }
 
-        // const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-        //     user._id
-        // );
         const accessToken = user.generateAccessToken();
 
         user.accessToken = accessToken;
@@ -151,10 +129,6 @@ const refreshAccessToken = async (req, res) => {
         return res
             .status(200)
             .json({ accessToken, message: "Access token refreshed successfully." });
-        // return res
-        //     .status(200)
-        //     .cookie("refreshToken", refreshToken, ACCESS_TOKEN_OPTIONS)
-        //     .json({ accessToken, message: "Access token refreshed successfully." });
 
     } catch (error) {
         console.log(error);
