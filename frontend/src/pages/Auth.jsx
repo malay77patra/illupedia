@@ -31,7 +31,7 @@ export default function Auth({ setAccessToken }) {
             const payload = { email: trimmedEmail, password: trimmedPassword };
 
             const response = await axios.post(
-                `http://illupedia.onrender.com/api/user/${endpoint}`,
+                `${import.meta.env.VITE_SERVER_URL}/api/user/${endpoint}`,
                 payload,
                 { withCredentials: true } // Ensures cookies are sent/received
             );
@@ -43,6 +43,7 @@ export default function Auth({ setAccessToken }) {
                 toast.error(error.response.data.message ||
                     (isLogin ? "Invalid email or password" : "Registration failed"));
             } else {
+                console.log("Error:", error);
                 toast.error("Network error, please try again!");
             }
         } finally {

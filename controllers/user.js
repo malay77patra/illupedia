@@ -35,21 +35,22 @@ const registerUser = async (req, res) => {
     }
 };
 
-const generateAccessAndRefreshTokens = async (userId) => {
-    try {
-        const user = await User.findById(userId);
+// const generateAccessAndRefreshTokens = async (userId) => {
+//     try {
+//         const user = await User.findById(userId);
 
-        const accessToken = user.generateAccessToken();
-        const refreshToken = user.generateRefreshToken();
+//         const accessToken = user.generateAccessToken();
+//         const refreshToken = user.generateRefreshToken();
 
-        user.refreshToken = refreshToken;
-        await user.save({ validateBeforeSave: false });
+//         user.refreshToken = refreshToken;
+//         await user.save({ validateBeforeSave: false });
 
-        return { accessToken, refreshToken };
-    } catch (error) {
-        throw new Error(error.message);
-    }
-};
+//         return { accessToken, refreshToken };
+//     } catch (error) {
+//         throw new Error(error.message);
+//     }
+// };
+
 
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
@@ -71,9 +72,15 @@ const loginUser = async (req, res) => {
             return res.status(401).json({ message: "Incorrect password." });
         }
 
-        const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-            user._id
-        );
+        // const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+        //     user._id
+        // );
+        const accessToken = user.generateAccessToken();
+        const refreshToken = user.generateRefreshToken();
+
+        user.accessToken = accessToken;
+        user.refreshToken = refreshToken;
+        await user.save({ validateBeforeSave: false });
 
         const loggedInUser = await User.findById(user._id).select(
             "-password -refreshToken"
@@ -122,24 +129,33 @@ const refreshAccessToken = async (req, res) => {
         );
 
         const user = await User.findById(decodedToken?._id);
-
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
+        if (!user.refreshToken) {
+            return res.status(401).json({ message: "User not logged in." });
+        }
 
-        if (user?.refreshToken !== incomingRefreshToken) {
+        if (user.refreshToken !== incomingRefreshToken) {
             return res.status(401).json({ message: "Invalid refresh token." });
         }
 
-        const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-            user._id
-        );
+        // const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
+        //     user._id
+        // );
+        const accessToken = user.generateAccessToken();
 
-        // Set the new tokens in cookies
+        user.accessToken = accessToken;
+        await user.save({ validateBeforeSave: false });
+
         return res
             .status(200)
-            .cookie("refreshToken", refreshToken, ACCESS_TOKEN_OPTIONS)
             .json({ accessToken, message: "Access token refreshed successfully." });
+        // return res
+        //     .status(200)
+        //     .cookie("refreshToken", refreshToken, ACCESS_TOKEN_OPTIONS)
+        //     .json({ accessToken, message: "Access token refreshed successfully." });
+
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Something went wrongagain, please try again later." });

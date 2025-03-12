@@ -11,13 +11,13 @@ const AuthProvider = ({ children }) => {
     useEffect(() => {
         const refreshToken = async () => {
             try {
-                const resp = await axios.post(import.meta.env.VITE_SERVER_URL + "/api/user/refresh-token",
+                const resp = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/user/refresh-token`,
                     {},
                     {
                         withCredentials: true,
                         validateStatus: (status) => true,
                     });
-                // setAccessToken(resp.data.accessToken);
+                setAccessToken(resp.data.accessToken);
             } catch (err) {
                 console.log("Error:", err)
             } finally {
