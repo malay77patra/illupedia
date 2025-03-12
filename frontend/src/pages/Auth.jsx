@@ -7,8 +7,10 @@ export default function Auth({ setAccessToken }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [isLogin, setIsLogin] = useState(true);
+    const [confirmPassword, setConfirmPassword] = useState("");
 
-    const handleLogin = async () => {
+    const handleSubmit = async () => {
         const trimmedEmail = email.trim();
         const trimmedPassword = password.trim();
 
@@ -17,20 +19,29 @@ export default function Auth({ setAccessToken }) {
             return;
         }
 
+        if (!isLogin && trimmedPassword !== confirmPassword) {
+            toast.error("Passwords do not match");
+            return;
+        }
+
         setLoading(true);
 
         try {
+            const endpoint = isLogin ? "login" : "register";
+            const payload = { email: trimmedEmail, password: trimmedPassword };
+
             const response = await axios.post(
-                "http://127.0.0.1:8000/api/user/login",
-                { email: trimmedEmail, password: trimmedPassword },
+                `http://illupedia.onrender.com/api/user/${endpoint}`,
+                payload,
                 { withCredentials: true } // Ensures cookies are sent/received
             );
 
             setAccessToken(response.data.accessToken);
-            toast.success("Login successful!");
+            toast.success(isLogin ? "Login successful!" : "Registration successful!");
         } catch (error) {
             if (error.response) {
-                toast.error(error.response.data.message || "Invalid email or password");
+                toast.error(error.response.data.message ||
+                    (isLogin ? "Invalid email or password" : "Registration failed"));
             } else {
                 toast.error("Network error, please try again!");
             }
@@ -39,9 +50,16 @@ export default function Auth({ setAccessToken }) {
         }
     };
 
+    const toggleAuthMode = () => {
+        setIsLogin(!isLogin);
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+    };
+
     return (
         <div className="max-w-sm mx-auto mt-10 p-5 border rounded-lg shadow-md">
-            <h2 className="text-xl font-bold mb-4">Login</h2>
+            <h2 className="text-xl font-bold mb-4">{isLogin ? "Login" : "Register"}</h2>
 
             <input
                 type="email"
@@ -61,9 +79,30 @@ export default function Auth({ setAccessToken }) {
                 disabled={loading}
             />
 
-            <Button onClick={handleLogin} disabled={loading}>
-                {loading ? "Logging in..." : "Login"}
+            {!isLogin && (
+                <input
+                    type="password"
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full p-2 mb-2 border rounded"
+                    disabled={loading}
+                />
+            )}
+
+            <Button onClick={handleSubmit} disabled={loading}>
+                {loading ? (isLogin ? "Logging in..." : "Registering...") : (isLogin ? "Login" : "Register")}
             </Button>
+
+            <div className="mt-4 text-center">
+                <button
+                    onClick={toggleAuthMode}
+                    className="text-blue-500 hover:underline"
+                    disabled={loading}
+                >
+                    {isLogin ? "Need an account? Register" : "Already have an account? Login"}
+                </button>
+            </div>
         </div>
     );
 }
