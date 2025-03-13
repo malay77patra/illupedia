@@ -1,7 +1,7 @@
 import Button from "@components/Button"
 import toast from "react-hot-toast"
 import axios from "axios"
-import { useAuth } from "@contexts/AuthProvider"
+import { useAuth } from '@hooks/useAuth'
 
 export default function Dashboard() {
   const { accessToken, setAccessToken } = useAuth();

@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useAuth } from "@hooks/useAuth";
 import axios from "axios";
 import Button from "@components/Button";
 import toast from "react-hot-toast";
 
-export default function Auth({ setAccessToken }) {
+export default function Auth() {
+    const { accessToken, setAccessToken } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -61,51 +63,53 @@ export default function Auth({ setAccessToken }) {
     };
 
     return (
-        <div className="max-w-sm mx-auto mt-10 p-5 border rounded-lg shadow-md">
-            <h2 className="text-xl font-bold mb-4">{isLogin ? "Login" : "Register"}</h2>
+        <>
+            <div className="max-w-sm mx-auto mt-10 p-5 border rounded-lg shadow-md">
+                <h2 className="text-xl font-bold mb-4">{isLogin ? "Login" : "Register"}</h2>
 
-            <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full p-2 mb-2 border rounded"
-                disabled={loading}
-            />
-
-            <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-2 mb-2 border rounded"
-                disabled={loading}
-            />
-
-            {!isLogin && (
                 <input
-                    type="password"
-                    placeholder="Confirm Password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="w-full p-2 mb-2 border rounded"
                     disabled={loading}
                 />
-            )}
 
-            <Button onClick={handleSubmit} disabled={loading} fullwidth>
-                {loading ? (isLogin ? "Logging in..." : "Registering...") : (isLogin ? "Login" : "Register")}
-            </Button>
-
-            <div className="mt-4 text-center">
-                <button
-                    onClick={toggleAuthMode}
-                    className="text-blue-500 hover:underline"
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full p-2 mb-2 border rounded"
                     disabled={loading}
-                >
-                    {isLogin ? "Need an account? Register" : "Already have an account? Login"}
-                </button>
+                />
+
+                {!isLogin && (
+                    <input
+                        type="password"
+                        placeholder="Confirm Password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="w-full p-2 mb-2 border rounded"
+                        disabled={loading}
+                    />
+                )}
+
+                <Button onClick={handleSubmit} disabled={loading} fullwidth>
+                    {loading ? (isLogin ? "Logging in..." : "Registering...") : (isLogin ? "Login" : "Register")}
+                </Button>
+
+                <div className="mt-4 text-center">
+                    <button
+                        onClick={toggleAuthMode}
+                        className="text-blue-500 hover:underline"
+                        disabled={loading}
+                    >
+                        {isLogin ? "Need an account? Register" : "Already have an account? Login"}
+                    </button>
+                </div>
             </div>
-        </div>
+        </>
     );
 }

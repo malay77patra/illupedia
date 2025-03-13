@@ -1,8 +1,8 @@
 import Branding from "./Branding"
 import MenuBtn from "./MenuBtn"
-import ThemeBtn from "./ThemeBtn"
+import ThemeTgl from "./ThemeTgl"
 import Button from "./Button"
-import { Link, NavLink } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 
 export default function Navbar() {
     return (
@@ -18,7 +18,7 @@ export default function Navbar() {
                 >
                     <Button>Dashboard</Button>
                 </NavLink>
-                <ThemeBtn />
+                <ThemeTgl />
                 <div className="md:hidden">
                     <MenuBtn />
                 </div>

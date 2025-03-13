@@ -1,8 +1,8 @@
-import IconBtn from "./IconBtn"
-import ThemeTgl from "./ThemeTgl"
-import { useState, useEffect } from "react";
+import { createContext, useEffect, useState } from "react";
 
-export default function ThemeBtn() {
+export const ThemeContext = createContext();
+
+export const ThemeProvider = ({ children }) => {
     const getInitialTheme = () => {
         if (localStorage.getItem("theme")) {
             return localStorage.getItem("theme");
@@ -16,9 +16,12 @@ export default function ThemeBtn() {
         document.documentElement.classList.toggle("dark", theme === "dark");
         localStorage.setItem("theme", theme);
     }, [theme]);
+
+    const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
+
     return (
-        <IconBtn colored={false}>
-            <ThemeTgl theme={theme} setTheme={setTheme} />
-        </IconBtn>
-    )
-}
+        <ThemeContext.Provider value={{ theme, toggleTheme }}>
+            {children}
+        </ThemeContext.Provider>
+    );
+};

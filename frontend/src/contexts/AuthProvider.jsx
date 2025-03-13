@@ -1,6 +1,7 @@
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 import axios from "axios";
-import toast from "react-hot-toast";
+import Auth from "@pages/Auth";
+// import toast from "react-hot-toast";
 
 const AuthContext = createContext(null);
 
@@ -39,11 +40,12 @@ const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={{ accessToken, setAccessToken }}>
-            {children}
+            {accessToken ? children : (
+                <Auth setAccessToken={setAccessToken} />
+            )}
         </AuthContext.Provider>
     );
 };
 
-const useAuth = () => useContext(AuthContext);
 
-export { AuthProvider, useAuth };
+export { AuthProvider, AuthContext };
