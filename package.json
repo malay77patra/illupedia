@@ -24,7 +24,6 @@
     "nodemon": "^3.1.9"
   },
   "_moduleAliases": {
-    "@root": ".",
     "@db": "./db",
     "@models": "./db/models",
     "@routes": "./routes",
