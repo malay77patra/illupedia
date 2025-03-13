@@ -1,6 +1,6 @@
 const User = require("@models/user");
 const jwt = require("jsonwebtoken");
-const { ACCESS_TOKEN_OPTIONS } = require("@config");
+const { REFRESH_TOKEN_OPTIONS } = require("@config");
 
 const registerUser = async (req, res) => {
     const { email, password } = req.body;
@@ -18,23 +18,12 @@ const registerUser = async (req, res) => {
 
         const user = await User.create({ email, password });
 
-        const createdUser = await User.findById(user._id).select(
-            "-password -refreshToken"
-        );
-
-        if (!createdUser) {
-            return res.status(500).json({ message: "Something went wrong, please try again later." });
-        }
-
-        return res
-            .status(201)
-            .json({ message: "Registered successfully." });
+        return res.status(201).json({ message: "Registered successfully." });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Something went wrong, please try again later." });
     }
 };
-
 
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
@@ -59,22 +48,12 @@ const loginUser = async (req, res) => {
         const accessToken = user.generateAccessToken();
         const refreshToken = user.generateRefreshToken();
 
-        user.accessToken = accessToken;
-        user.refreshToken = refreshToken;
-        await user.save({ validateBeforeSave: false });
+        await User.findByIdAndUpdate(user._id, { refreshToken }, { new: true });
 
-        const loggedInUser = await User.findById(user._id).select(
-            "-password -refreshToken"
-        );
-
-        // Set refresh token as http-Only with expiry time
         return res
             .status(200)
-            .cookie("refreshToken", refreshToken, ACCESS_TOKEN_OPTIONS)
-            .json({
-                accessToken,
-                message: "Logged in successfully."
-            });
+            .cookie("refreshToken", refreshToken, REFRESH_TOKEN_OPTIONS)
+            .json({ accessToken, message: "Logged in successfully." });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Something went wrong, please try again later." });
@@ -84,16 +63,13 @@ const loginUser = async (req, res) => {
 const logoutUser = async (req, res) => {
     await User.findByIdAndUpdate(
         req.user._id,
-        {
-            $set: { refreshToken: undefined },
-        },
+        { $unset: { refreshToken: 1 } },
         { new: true }
     );
 
-    return res
-        .status(200)
-        .cookie("refreshToken", "", ACCESS_TOKEN_OPTIONS)
-        .json({ message: "Logged out." });
+    res.clearCookie("refreshToken", REFRESH_TOKEN_OPTIONS);
+
+    return res.status(200).json({ message: "Logged out." });
 };
 
 const refreshAccessToken = async (req, res) => {
@@ -104,10 +80,7 @@ const refreshAccessToken = async (req, res) => {
     }
 
     try {
-        const decodedToken = jwt.verify(
-            incomingRefreshToken,
-            process.env.REFRESH_TOKEN_SECRET
-        );
+        const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);
 
         const user = await User.findById(decodedToken?._id);
         if (!user) {
@@ -116,23 +89,18 @@ const refreshAccessToken = async (req, res) => {
         if (!user.refreshToken) {
             return res.status(401).json({ message: "User not logged in." });
         }
-
         if (user.refreshToken !== incomingRefreshToken) {
             return res.status(401).json({ message: "Invalid refresh token." });
         }
 
         const accessToken = user.generateAccessToken();
 
-        user.accessToken = accessToken;
-        await user.save({ validateBeforeSave: false });
+        await User.findByIdAndUpdate(user._id, { accessToken }, { new: true });
 
-        return res
-            .status(200)
-            .json({ accessToken, message: "Access token refreshed successfully." });
-
+        return res.status(200).json({ accessToken, message: "Access token refreshed successfully." });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ message: "Something went wrongagain, please try again later." });
+        return res.status(500).json({ message: "Something went wrong, please try again later." });
     }
 };
 
