@@ -38,6 +38,8 @@ export default function Auth({ setAccessToken }) {
 
             setAccessToken(response.data.accessToken);
             toast.success(isLogin ? "Login successful!" : "Registration successful!");
+
+            setIsLogin(true);
         } catch (error) {
             if (error.response) {
                 toast.error(error.response.data.message ||
