@@ -8,6 +8,9 @@
             "@models/*": [
                 "./db/models/*"
             ],
+            "@routes": [
+                "./routes/index.js"
+            ],
             "@routes/*": [
                 "./routes/*"
             ],
@@ -17,8 +20,8 @@
             "@middlewares/*": [
                 "./middlewares/*"
             ],
-            "@config/*": [
-                "./config/*"
+            "@config": [
+                "./config.js"
             ],
             "@utils/*": [
                 "./utils/*"

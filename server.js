@@ -5,9 +5,8 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const connectDB = require("@db/connect");
-const path = require("path");
 const routes = require("@routes");
-
+const { REFRESH_TOKEN_OPTIONS } = require("@config");
 
 // Load environment variables
 dotenv.config();
@@ -28,7 +27,7 @@ app.use(routes);
 
 // Test route
 app.get("/", (req, res) => {
-    res.status(200).send("Server Online!");
+    res.status(200).json(REFRESH_TOKEN_OPTIONS);
 });
 
 
