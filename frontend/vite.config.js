@@ -12,6 +12,7 @@ export default defineConfig({
       "@contexts": resolve(__dirname, "src/contexts"),
       "@hooks": resolve(__dirname, "src/hooks"),
       "@pages": resolve(__dirname, "src/pages"),
+      "@providers": resolve(__dirname, "src/providers"),
       "@styles": resolve(__dirname, "src/styles"),
       "@utils": resolve(__dirname, "src/utils"),
     },

@@ -17,6 +17,9 @@
             "@pages/*": [
                 "src/pages/*"
             ],
+            "@providers/*": [
+                "src/providers/*"
+            ],
             "@styles/*": [
                 "src/styles/*"
             ],

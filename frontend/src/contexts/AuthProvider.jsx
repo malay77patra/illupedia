@@ -1,6 +1,8 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import Auth from "@pages/Auth";
+import Error from "@pages/Error";
+import Loading from "@pages/Loading";
 // import toast from "react-hot-toast";
 
 const AuthContext = createContext(null);
@@ -24,24 +26,19 @@ const AuthProvider = ({ children }) => {
             } finally {
                 setLoading(false);
             }
-
         };
 
         refreshToken();
     }, []);
 
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center min-h-screen bg-white">
-                <div className="animate-spin h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full"></div>
-            </div>
-        );
-    }
-
     return (
         <AuthContext.Provider value={{ accessToken, setAccessToken }}>
-            {accessToken ? children : (
-                <Auth setAccessToken={setAccessToken} />
+            {loading ? (
+                <Loading />
+            ) : (
+                accessToken ? children : (
+                    <Auth setAccessToken={setAccessToken} />
+                )
             )}
         </AuthContext.Provider>
     );
