@@ -12,9 +12,6 @@ module.exports = {
                 muted: 'var(--color-muted)',
                 border: 'var(--color-border)',
             },
-            fontFamily: {
-                acadian: ['Acadian', 'sans-serif'],
-            },
             opacity: {
                 'active': '0.9',
                 'disabled': '0.6'
