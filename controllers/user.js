@@ -70,7 +70,8 @@ const logoutUser = async (req, res) => {
 
     // Remove the maxAge since its depreacted from clearCookie.
     //
-    // express deprecated res.clearCookie: Passing "options.maxAge" is deprecated. In v5.0.0 of Express, this option will be ignored, as res.clearCookie will automatically set cookies to expire immediately.
+    // express deprecated res.clearCookie: Passing "options.maxAge" is deprecated.
+    // In v5.0.0 of Express, this option will be ignored, as res.clearCookie will automatically set cookies to expire immediately.
     //
     const REFRESH_TOKEN_OPTIONS_FOR_DELETION = { ...REFRESH_TOKEN_OPTIONS };
     delete REFRESH_TOKEN_OPTIONS_FOR_DELETION.maxAge;

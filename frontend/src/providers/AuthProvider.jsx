@@ -1,11 +1,7 @@
-import { createContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { AuthContext } from "@contexts/AuthContext";
 import axios from "axios";
-import Auth from "@pages/Auth";
-import Error from "@pages/Error";
 import Loading from "@pages/Loading";
-// import toast from "react-hot-toast";
-
-const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
     const [accessToken, setAccessToken] = useState("");
@@ -35,11 +31,7 @@ const AuthProvider = ({ children }) => {
         <AuthContext.Provider value={{ accessToken, setAccessToken }}>
             {loading ? (
                 <Loading />
-            ) : (
-                accessToken ? children : (
-                    <Auth setAccessToken={setAccessToken} />
-                )
-            )}
+            ) : children}
         </AuthContext.Provider>
     );
 };

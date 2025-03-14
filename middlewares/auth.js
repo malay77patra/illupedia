@@ -15,7 +15,7 @@ const verifyJWT = async (req, res, next) => {
         } catch (error) {
 
             if (error.name === "TokenExpiredError") {
-                return res.status(401).json({ message: "Session expired, please login again." });
+                return res.status(401).json({ message: "Session expired, please login." });
             }
             if (error.name === "JsonWebTokenError" || error.name === "NotBeforeError") {
                 return res.status(403).json({ message: "Unauthorized request blocked." });
