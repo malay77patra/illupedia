@@ -1,12 +1,13 @@
-import Logo from "./Logo"
+import Logo from "./Logo";
+import { Link } from "react-router-dom";
 
 export default function Branding() {
     return (
-        <a href="/" className="items-center justify-center gap-1 inline-flex">
+        <Link to="/" className="items-center justify-center gap-1 inline-flex">
             <Logo size="medium" />
             <div>
                 <h1 className="self-center text-2xl font-semibold hidden sm:block">Illupedia</h1>
             </div>
-        </a>
-    )
+        </Link>
+    );
 }
