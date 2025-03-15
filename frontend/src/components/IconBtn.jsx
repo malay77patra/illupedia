@@ -1,6 +1,6 @@
-export default function IconBtn({ children, colored = true }) {
+export default function IconBtn({ children, colored = true, ...props }) {
     return (
-        <button className={`p-2 rounded-sm cursor-pointer  ${colored ? 'hover:bg-secondary active:opacity-active' : ''}`}>
+        <button className={`p-2 rounded-sm cursor-pointer  ${colored ? 'hover:bg-secondary active:opacity-active' : ''}`} {...props}>
             {children}
         </button>
     )

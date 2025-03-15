@@ -7,8 +7,8 @@ export default function ThemeTgl() {
     const { theme, toggleTheme } = useTheme();
 
     return (
-        <IconBtn colored={false}>
-            <div className="theme-toggle" onClick={toggleTheme}>
+        <IconBtn colored={false} onClick={toggleTheme}>
+            <div className="theme-toggle">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className={theme === "dark" ? "active" : ""}>
                     <clipPath id="theme-toggle-clip">
                         <path d="M0-11h25a1 1 0 0017 13v30H0Z" />
