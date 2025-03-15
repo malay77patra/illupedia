@@ -1,5 +1,4 @@
 import Branding from "./Branding";
-import MenuBtn from "./MenuBtn";
 import ThemeTgl from "./ThemeTgl";
 import Button from "./Button";
 import { NavLink } from "react-router-dom";
@@ -24,9 +23,6 @@ export default function Navbar() {
                     </NavLink>
                 )}
                 <ThemeTgl />
-                <div className="md:hidden">
-                    <MenuBtn />
-                </div>
             </div>
         </nav>
     );
