@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { AuthContext } from "@contexts/AuthContext";
 import axios from "axios";
 import Loading from "@pages/Loading";
+import Error from "@pages/Error";
 
 const AuthProvider = ({ children }) => {
     const [accessToken, setAccessToken] = useState("");
     const [loading, setLoading] = useState(true);
+    const [errAuthenticating, setErrAuthenticating] = useState(false);
 
     useEffect(() => {
         const refreshToken = async () => {
@@ -19,6 +21,7 @@ const AuthProvider = ({ children }) => {
                 setAccessToken(resp.data.accessToken);
             } catch (err) {
                 console.log("Error:", err)
+                setErrAuthenticating(true);
             } finally {
                 setLoading(false);
             }
@@ -29,9 +32,7 @@ const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={{ accessToken, setAccessToken }}>
-            {loading ? (
-                <Loading />
-            ) : children}
+            {errAuthenticating ? <Error /> : loading ? <Loading /> : children}
         </AuthContext.Provider>
     );
 };
