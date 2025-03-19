@@ -1,7 +1,7 @@
-import Button from "@components/Button"
-import toast from "react-hot-toast"
-import axios from "axios"
-import { useAuth } from '@hooks/useAuth'
+import Button from "@components/Button";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { useAuth } from '@hooks/useAuth';
 
 export default function Dashboard() {
   const { accessToken, setAccessToken } = useAuth();
@@ -30,5 +30,5 @@ export default function Dashboard() {
     <>
       <Button onClick={handleLogOut}>Logout</Button>
     </>
-  )
+  );
 }

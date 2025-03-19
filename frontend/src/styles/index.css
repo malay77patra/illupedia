@@ -8,7 +8,7 @@
 :root {
     --color-background: #f9f5ff;
     --color-surface: #ffffff;
-    --color-accent: #3b49df;
+    --color-accent: #712cf9;
     --color-secondary: #d8d3ff;
     --color-text: #1a1a2e;
     --color-muted: #858585;
@@ -19,7 +19,7 @@
 .dark {
     --color-background: #13111a;
     --color-surface: #1c1a27;
-    --color-accent: #9a8cff;
+    /* --color-accent: #9a8cff; */
     --color-secondary: #5c5470;
     --color-text: #f4f1ff;
     --color-muted: #8c849c;
