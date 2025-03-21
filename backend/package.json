@@ -1,0 +1,32 @@
+{
+  "type": "commonjs",
+  "scripts": {
+    "build": "echo 'Building... This may take a year. Just kidding •ᴗ• all done! 🚀'",
+    "dev": "cross-env NODE_ENV=development nodemon server.js",
+    "start": "node server.js",
+    "tenv": "node scripts/generate-example-env.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "module-alias": "^2.2.3",
+    "mongoose": "^8.12.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "_moduleAliases": {
+    "@db": "./db",
+    "@models": "./db/models",
+    "@routes": "./routes",
+    "@controllers": "./controllers",
+    "@middlewares": "./middlewares",
+    "@config": "./config.js",
+    "@utils": "./utils"
+  }
+}
