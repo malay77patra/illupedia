@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ThemeContext } from "@contexts/ThemeContext";
 
-ThemeProvider = ({ children }) => {
+const ThemeProvider = ({ children }) => {
     const getInitialTheme = () => {
         if (localStorage.getItem("theme")) {
             return localStorage.getItem("theme");
