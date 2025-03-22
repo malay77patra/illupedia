@@ -1,11 +1,9 @@
 {
   "type": "commonjs",
   "scripts": {
-    "build": "echo 'Building... This may take a year. Just kidding •ᴗ• all done! 🚀'",
-    "dev": "concurrently \"cross-env NODE_ENV=development nodemon server.js\" \"npm --prefix frontend run dev\"",
+    "build": "echo 'Building... This may take few years. Just kidding •ᴗ• all done! 🚀'",
+    "dev": "cross-env NODE_ENV=development nodemon server.js",
     "start": "node server.js",
-    "build:f": "npm --prefix frontend run build",
-    "dev:b": "cross-env NODE_ENV=development nodemon server.js",
     "tenv": "node scripts/generate-example-env.js"
   },
   "dependencies": {
@@ -17,8 +15,7 @@
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "module-alias": "^2.2.3",
-    "mongoose": "^8.12.1",
-    "react-login-page": "^1.0.4"
+    "mongoose": "^8.12.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
