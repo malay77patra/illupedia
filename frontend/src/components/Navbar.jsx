@@ -5,7 +5,7 @@ import Avatar from "./Avatar";
 import Button from "./Button";
 import { useNavigate, useLocation } from "react-router-dom";
 
-export default function Navbar() {
+function Navbar() {
     const navigate = useNavigate();
     const location = useLocation();
     const { accessToken, setAccessToken } = useAuth();
@@ -35,3 +35,5 @@ export default function Navbar() {
         </nav>
     );
 }
+
+export default Navbar;

@@ -4,7 +4,7 @@ import axios from "axios";
 import Button from "@components/Button";
 import toast from "react-hot-toast";
 
-export default function Auth() {
+function Auth() {
     const { accessToken, setAccessToken } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -113,3 +113,5 @@ export default function Auth() {
         </>
     );
 }
+
+export default Auth;

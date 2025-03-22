@@ -24,10 +24,10 @@ const LogoSVG = ({ width = "32", height = "32", ...props }) => {
                 }}
             />
         </svg>
-    )
+    );
 }
 
-export default function Logo({ size = "small", className = "" }) {
+function Logo({ size = "small", className = "" }) {
     const sizeMap = {
         small: "1rem",
         medium: "2rem",
@@ -44,3 +44,5 @@ export default function Logo({ size = "small", className = "" }) {
         />
     );
 }
+
+export default Logo;

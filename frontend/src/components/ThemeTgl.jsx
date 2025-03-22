@@ -2,7 +2,7 @@ import { useTheme } from '@hooks/useTheme'
 import IconBtn from './IconBtn';
 
 
-export default function ThemeTgl() {
+function ThemeTgl() {
 
     const { theme, toggleTheme } = useTheme();
 
@@ -23,3 +23,5 @@ export default function ThemeTgl() {
         </IconBtn>
     );
 }
+
+export default ThemeTgl;

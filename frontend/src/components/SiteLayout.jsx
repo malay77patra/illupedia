@@ -1,6 +1,6 @@
 import Navbar from "./Navbar";
 
-export default function SiteLayout({ children }) {
+function SiteLayout({ children }) {
 
     return (
         <>
@@ -11,3 +11,5 @@ export default function SiteLayout({ children }) {
         </>
     );
 }
+
+export default SiteLayout;

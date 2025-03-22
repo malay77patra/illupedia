@@ -1,4 +1,4 @@
-export default function Avatar({
+function Avatar({
     src,
     alt = "User",
     size = "36px",
@@ -26,3 +26,5 @@ export default function Avatar({
         </div>
     );
 }
+
+export default Avatar;

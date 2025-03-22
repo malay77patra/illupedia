@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useAuth } from '@hooks/useAuth';
 
-export default function Dashboard() {
+function Dashboard() {
   const { accessToken, setAccessToken } = useAuth();
 
   const handleLogOut = async () => {
@@ -32,3 +32,5 @@ export default function Dashboard() {
     </>
   );
 }
+
+export default Dashboard;

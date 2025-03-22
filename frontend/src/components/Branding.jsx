@@ -1,7 +1,7 @@
 import Logo from "./Logo";
 import { Link } from "react-router-dom";
 
-export default function Branding() {
+function Branding() {
     return (
         <Link to="/" className="items-center justify-center gap-1 inline-flex">
             <Logo size="medium" />
@@ -11,3 +11,5 @@ export default function Branding() {
         </Link>
     );
 }
+
+export default Branding;

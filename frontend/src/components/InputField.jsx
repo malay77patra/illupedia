@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function InputField({ type, placeholder, register, error }) {
+function InputField({ type, placeholder, register, error }) {
     return (
         <div>
             <input type={type} placeholder={placeholder} {...register} />
@@ -8,3 +8,5 @@ export default function InputField({ type, placeholder, register, error }) {
         </div>
     );
 }
+
+export default InputField;
