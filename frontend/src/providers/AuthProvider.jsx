@@ -6,6 +6,7 @@ import Error from "@pages/Error";
 
 const AuthProvider = ({ children }) => {
     const [accessToken, setAccessToken] = useState("");
+    const isAuthenticated = !!accessToken;
     const [loading, setLoading] = useState(true);
     const [errAuthenticating, setErrAuthenticating] = useState(false);
 
@@ -31,7 +32,7 @@ const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ accessToken, setAccessToken }}>
+        <AuthContext.Provider value={{ isAuthenticated, accessToken, setAccessToken }}>
             {errAuthenticating ? <Error /> : loading ? <Loading /> : children}
         </AuthContext.Provider>
     );

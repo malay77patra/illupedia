@@ -5,7 +5,7 @@ import Button from "@components/Button";
 import toast from "react-hot-toast";
 
 function Auth() {
-    const { accessToken, setAccessToken } = useAuth();
+    const { setAccessToken } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);

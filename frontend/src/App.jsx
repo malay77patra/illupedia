@@ -4,6 +4,7 @@ import Dashboard from '@pages/Dashboard';
 import Auth from "@pages/Auth";
 import '@styles/components.css';
 import SiteLayout from "@components/SiteLayout";
+import ProtectedRoute from "@components/ProtectedRoute";
 
 function App() {
 
@@ -11,7 +12,11 @@ function App() {
     <SiteLayout>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        } />
         <Route path="/auth" element={<Auth />} />
       </Routes >
     </SiteLayout>
