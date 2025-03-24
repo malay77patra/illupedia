@@ -5,21 +5,21 @@ import Loading from "@pages/Loading";
 import Error from "@pages/Error";
 
 const AuthProvider = ({ children }) => {
-    const [accessToken, setAccessToken] = useState("");
-    const isAuthenticated = !!accessToken;
+    const [user, setUser] = useState(null);
+    const isAuthenticated = !!user && Object.keys(user).length > 0;
     const [loading, setLoading] = useState(true);
     const [errAuthenticating, setErrAuthenticating] = useState(false);
 
     useEffect(() => {
         const refreshToken = async () => {
             try {
-                const resp = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/user/refresh-token`,
+                const resp = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/user/refresh`,
                     {},
                     {
                         withCredentials: true,
                         validateStatus: (status) => true,
                     });
-                setAccessToken(resp.data.accessToken);
+                setUser(resp.data.user);
             } catch (err) {
                 console.log("Error:", err)
                 setErrAuthenticating(true);
@@ -32,7 +32,7 @@ const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, accessToken, setAccessToken }}>
+        <AuthContext.Provider value={{ isAuthenticated, user, setUser }}>
             {errAuthenticating ? <Error /> : loading ? <Loading /> : children}
         </AuthContext.Provider>
     );

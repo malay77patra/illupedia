@@ -1,6 +1,7 @@
 const User = require("@models/user");
 const jwt = require("jsonwebtoken");
 const { REFRESH_TOKEN_OPTIONS } = require("@config");
+const { sanitizeUser } = require("@utils");
 
 const registerUser = async (req, res) => {
     const { email, password } = req.body;
@@ -53,7 +54,7 @@ const loginUser = async (req, res) => {
         return res
             .status(200)
             .cookie("refreshToken", refreshToken, REFRESH_TOKEN_OPTIONS)
-            .json({ accessToken, message: "Logged in successfully." });
+            .json({ user: { accessToken, ...sanitizeUser(user) }, message: "Logged in successfully." });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Something went wrong, please try again later." });
@@ -81,36 +82,48 @@ const logoutUser = async (req, res) => {
     return res.status(200).json({ message: "Logged out." });
 };
 
-const refreshAccessToken = async (req, res) => {
+const refreshUser = async (req, res) => {
     const incomingRefreshToken = req.cookies.refreshToken;
 
     if (!incomingRefreshToken) {
-        return res.status(401).json({ message: "Refresh token not found." });
+        return res.status(204).send();
     }
 
     try {
         const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);
 
         const user = await User.findById(decodedToken?._id);
+
         if (!user) {
-            return res.status(404).json({ message: "User not found." });
+            return res.status(403).json({ message: "User not found or invalid token." });
         }
+
         if (!user.refreshToken) {
-            return res.status(401).json({ message: "User not logged in." });
+            return res.status(403).json({ message: "User not logged in." });
         }
+
         if (user.refreshToken !== incomingRefreshToken) {
-            return res.status(401).json({ message: "Invalid refresh token." });
+            return res.status(403).json({ message: "Invalid refresh token." });
         }
 
         const accessToken = user.generateAccessToken();
 
         await User.findByIdAndUpdate(user._id, { accessToken }, { new: true });
 
-        return res.status(200).json({ accessToken, message: "Access token refreshed successfully." });
+        return res.status(200).json({
+            user: { accessToken, ...sanitizeUser(user) },
+            message: "Access token refreshed successfully."
+        });
+
     } catch (error) {
-        console.log(error);
+        console.error(error);
+
+        if (error.name === "TokenExpiredError" || error.name === "JsonWebTokenError") {
+            return res.status(403).json({ message: "Invalid or expired token." });
+        }
+
         return res.status(500).json({ message: "Something went wrong, please try again later." });
     }
 };
 
-module.exports = { registerUser, loginUser, logoutUser, refreshAccessToken };
+module.exports = { registerUser, loginUser, logoutUser, refreshUser };

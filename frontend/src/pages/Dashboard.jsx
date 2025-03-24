@@ -4,7 +4,7 @@ import axios from "axios";
 import { useAuth } from '@hooks/useAuth';
 
 function Dashboard() {
-  const { accessToken, setAccessToken } = useAuth();
+  const { user, setUser } = useAuth();
 
   const handleLogOut = async () => {
     try {
@@ -13,12 +13,12 @@ function Dashboard() {
         {},
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${user.accessToken}`,
           },
           withCredentials: true
         }
       );
-      setAccessToken(null);
+      setUser(null);
       toast.success(response.data.message);
     } catch (err) {
       console.log(err);

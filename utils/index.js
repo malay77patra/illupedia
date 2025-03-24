@@ -1,3 +1,4 @@
+const sanitizeUser = require("./sanitizeUser");
 
 
 function getJwtFormat(ms) {
@@ -12,4 +13,6 @@ function getJwtFormat(ms) {
     return `${seconds / (24 * 60 * 60)}d`;
 }
 
-module.exports = { getJwtFormat };
+
+
+module.exports = { getJwtFormat, sanitizeUser };

@@ -5,7 +5,7 @@ import Button from "@components/Button";
 import toast from "react-hot-toast";
 
 function Auth() {
-    const { setAccessToken } = useAuth();
+    const { setUser } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -38,7 +38,7 @@ function Auth() {
                 { withCredentials: true }
             );
 
-            setAccessToken(response.data.accessToken);
+            setUser(response.data.user);
             toast.success(isLogin ? "Login successful!" : "Registration successful!");
 
             setIsLogin(true);
