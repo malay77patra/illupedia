@@ -3,6 +3,7 @@ import { AuthContext } from "@contexts/AuthContext";
 import axios from "axios";
 
 const AuthProvider = ({ children }) => {
+    const [authenticating, setAuthenticating] = useState(true);
     const [user, setUser] = useState(null);
     const isAuthenticated = !!user && Object.keys(user).length > 0;
 
@@ -13,10 +14,12 @@ const AuthProvider = ({ children }) => {
                     withCredentials: true,
                     validateStatus: (status) => true
                 });
-                console.log(response);
                 setUser(response?.data?.user);
+
             } catch (err) {
                 console.error("Error fetching user data:", err);
+            } finally {
+                setAuthenticating(false);
             }
         }
 
@@ -24,7 +27,7 @@ const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, user, setUser }}>
+        <AuthContext.Provider value={{ authenticating, isAuthenticated, user, setUser }}>
             {children}
         </AuthContext.Provider>
     );

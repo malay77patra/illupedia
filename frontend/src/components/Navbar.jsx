@@ -24,7 +24,7 @@ function Navbar() {
                     </>
                 ) : (
                     <>
-                        {location.pathname !== "/auth" && (
+                        {location.pathname == "/" && (
                             <Button onClick={() => navigate("/auth")}>Get Started</Button>
                         )}
 

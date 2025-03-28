@@ -1,16 +1,21 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@hooks/useAuth";
+import Loading from "@pages/Loading";
 
 const ProtectedRoute = ({ children }) => {
-    const { isAuthenticated } = useAuth();
+    const { authenticating, isAuthenticated } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!isAuthenticated) {
+        if (!authenticating && !isAuthenticated) {
             navigate("/auth", { replace: true });
         }
-    }, [isAuthenticated, navigate]);
+    }, [authenticating, isAuthenticated, navigate]);
+
+    if (authenticating) {
+        return <Loading />;
+    }
 
     return isAuthenticated ? children : null;
 };
