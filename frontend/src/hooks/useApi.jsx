@@ -1,52 +1,89 @@
 import { useCallback } from "react";
 import axios from "axios";
 import { useAuth } from "./useAuth";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
 
 const useApi = () => {
-    const { setUser, user } = useAuth();
+    const { user, setUser } = useAuth();
+    const navigate = useNavigate();
 
     const api = axios.create({
-        baseURL: import.meta.env.VITE_SERVER_URL,
-        withCredentials: true
+        baseURL: `${import.meta.env.VITE_SERVER_URL}/api`,
     });
 
-    api.interceptors.request.use(
-        (config) => {
-            if (user?.accessToken) {
-                config.headers.Authorization = `Bearer ${user.accessToken}`;
-            }
-            return config;
+    let isRefreshing = false;
+    let refreshPromise = null;
+
+    const refreshToken = async () => {
+        if (!isRefreshing) {
+            isRefreshing = true;
+
+            refreshPromise = api.post("/user/refresh", {}, { withCredentials: true })
+                .then((res) => {
+                    if (res.data.user) setUser(res.data.user);
+                    isRefreshing = false;
+                    return res.data.accessToken;
+                })
+                .catch(() => {
+                    isRefreshing = false;
+                    navigate("/login");
+                    throw new Error("Token refresh failed");
+                });
+        }
+        return refreshPromise;
+    };
+
+    api.interceptors.request.use((config) => {
+        if (user?.accessToken) {
+            config.headers.Authorization = `Bearer ${user.accessToken}`;
+        }
+        return config;
+    });
+
+    api.interceptors.response.use(
+        (response) => {
+            if (response.data?.user) setUser(response.data.user);
+            if (response.data?.message) toast.success(response.data.message);
+            return response;
         },
-        (error) => Promise.reject(error)
-    );
+        async (error) => {
+            const originalRequest = error.config;
 
-    const requestWithRetry = useCallback(async (config, retries = 1) => {
-        try {
-            return await api(config);
-        } catch (error) {
-            if (error.response?.status === 401 && retries > 0) {
+            if (error.response?.status === 401 && !originalRequest._retry) {
+                originalRequest._retry = true;
+
                 try {
-                    const refreshResponse = await api.post("/refresh");
-
-                    setUser((prev) => ({
-                        ...prev,
-                        accessToken: refreshResponse.data.accessToken
-                    }));
-
-                    return await requestWithRetry(config, retries - 1);
+                    const newToken = await refreshToken();
+                    originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                    return api(originalRequest);
                 } catch {
-                    throw new Error("User needs to log in.");
+                    navigate("/login");
+                    throw new Error("Redirecting to login");
                 }
             }
-            throw error;
+
+            return Promise.reject(error);
         }
-    }, [setUser, user]);
+    );
+
+    const request = useCallback(
+        async (method, url, data = null, config = {}) => {
+            const response = await api({ method, url, data, ...config });
+
+            if (response.data?.message) toast.success(response.data.message);
+
+            return response.data;
+        },
+        [user, setUser, navigate]
+    );
 
     return {
-        get: (url, config = {}) => requestWithRetry({ ...config, method: "GET", url }),
-        post: (url, data, config = {}) => requestWithRetry({ ...config, method: "POST", url, data }),
-        put: (url, data, config = {}) => requestWithRetry({ ...config, method: "PUT", url, data }),
-        delete: (url, config = {}) => requestWithRetry({ ...config, method: "DELETE", url })
+        get: (url, config = {}) => request("GET", url, null, config),
+        post: (url, data, config = {}) => request("POST", url, data, config),
+        put: (url, data, config = {}) => request("PUT", url, data, config),
+        delete: (url, config = {}) => request("DELETE", url, null, config)
     };
 };
 

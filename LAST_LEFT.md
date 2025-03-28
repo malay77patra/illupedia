@@ -1,0 +1,1 @@
+CheckUser component started, its required to initially fetch the user since i removed that logic from auth provider i need another wrapper for that. if i dont use that it will not presist the user in dashboard on refresh, since on refresh the token is lost and your app is not fetching the token initially.

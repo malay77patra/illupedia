@@ -2,24 +2,16 @@ import Button from "@components/Button";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useAuth } from '@hooks/useAuth';
+import { useApi } from "@hooks/useApi";
+import { useEffect } from "react";
 
 function Dashboard() {
   const { user, setUser } = useAuth();
+  const api = useApi();
 
   const handleLogOut = async () => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/api/user/logout`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${user.accessToken}`,
-          },
-          withCredentials: true
-        }
-      );
-      setUser(null);
-      toast.success(response.data.message);
+      await api.post("/user/logout");
     } catch (err) {
       console.log(err);
       toast.error("Unable to logout user, something went wrong.");

@@ -7,7 +7,6 @@ import SiteLayout from "@components/SiteLayout";
 import ProtectedRoute from "@components/ProtectedRoute";
 
 function App() {
-
   return (
     <SiteLayout>
       <Routes>
