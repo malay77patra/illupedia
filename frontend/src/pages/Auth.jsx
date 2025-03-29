@@ -36,7 +36,9 @@ function Auth() {
         const loginUser = async () => {
             try {
                 const response = await api.post("/user/login", data);
-                toast.success("Login successful!");
+                if (!response.ok) {
+                    toast.success("Login unsuccessful!");
+                }
             } catch (error) {
                 toast.error("Unable to login, try again later.");
                 console.log(error);

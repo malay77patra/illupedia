@@ -9,6 +9,7 @@ const useApi = () => {
 
     const api = axios.create({
         baseURL: `${import.meta.env.VITE_SERVER_URL}/api`,
+        validateStatus: (status) => true
     });
 
     let isRefreshing = false;

@@ -6,36 +6,46 @@ const verifyJWT = async (req, res, next) => {
         const token = req.header("Authorization")?.replace("Bearer ", "");
 
         if (!token) {
-            return res.status(401).json({ message: "Unauthorized request blocked." });
+            return res.status(401).json({
+                error: {
+                    message: "Unauthorized request blocked."
+                }
+            });
         }
 
-        let decodedToken;
-        try {
-            decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        } catch (error) {
-
-            if (error.name === "TokenExpiredError") {
-                return res.status(401).json({ message: "Session expired, please login." });
-            }
-            if (error.name === "JsonWebTokenError" || error.name === "NotBeforeError") {
-                return res.status(403).json({ message: "Unauthorized request blocked." });
-            }
-
-            console.error("JWT Verification Error:", error);
-            return res.status(500).json({ message: "Unable to verify user, please try again later." });
-        }
-
-        const user = await User.findById(decodedToken?._id).select("-password -refreshToken");
+        const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        const user = await User.findById(decodedToken._id);
 
         if (!user) {
-            return res.status(404).json({ message: "User not found." });
+            return res.status(401).json({
+                error: {
+                    message: "User not found."
+                }
+            });
         }
 
-        req.user = user;
         next();
+
     } catch (error) {
-        console.error("Unexpected JWT Verification Error:", error);
-        return res.status(500).json({ message: "Unable to verify user, please try again later." });
+        if (error.name === "TokenExpiredError") {
+            return res.status(401).json({
+                error: {
+                    message: "Session expired, please login."
+                }
+            });
+        } else if (error.name === "JsonWebTokenError" || error.name === "NotBeforeError") {
+            return res.status(401).json({
+                error: {
+                    message: "Unauthorized request blocked."
+                }
+            });
+        }
+
+        return res.status(500).json({
+            error: {
+                message: "An unexpected error occurred. Please try again later."
+            }
+        });
     }
 };
 

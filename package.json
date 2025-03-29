@@ -2,24 +2,27 @@
   "type": "commonjs",
   "scripts": {
     "build": "echo 'Building... This may take few years. Just kidding •ᴗ• all done! 🚀'",
-    "dev": "cross-env NODE_ENV=development nodemon server.js",
-    "start": "node server.js",
-    "tenv": "node scripts/generate-example-env.js"
+    "dev": "nodemon server.js",
+    "start": "node server.js --env=production",
+    "tenv": "node scripts/generate-example-env.js",
+    "test": "jest"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "cross-env": "^7.0.3",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "module-alias": "^2.2.3",
-    "mongoose": "^8.12.1"
+    "mongoose": "^8.12.1",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.9",
+    "supertest": "^7.1.0"
   },
   "_moduleAliases": {
     "@db": "./db",

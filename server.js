@@ -11,6 +11,7 @@ const routes = require("@routes");
 dotenv.config();
 
 // Definations
+const isProduction = process.argv.includes('--env=production');
 const app = express();
 const PORT = process.env.PORT || 8000;
 
@@ -34,10 +35,10 @@ app.get("/", (req, res) => {
 connectDB()
     .then(() => {
         app.listen(PORT, () => {
-            if (process.env.NODE_ENV === "development") {
-                console.log(`Server listening on port ${PORT}\n➜  Visit : http://localhost:${PORT}`);
-            } else {
+            if (isProduction) {
                 console.log(`Server listening on port ${PORT}`);
+            } else {
+                console.log(`Server listening on port ${PORT}\n➜  Visit : http://localhost:${PORT}`);
             }
         });
     })
