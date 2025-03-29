@@ -11,6 +11,7 @@ module.exports = {
                 text: 'var(--color-text)',
                 muted: 'var(--color-muted)',
                 border: 'var(--color-border)',
+                component: 'var(--color-component)',
             },
             opacity: {
                 'active': '0.9',

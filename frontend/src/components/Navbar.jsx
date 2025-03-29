@@ -2,7 +2,8 @@ import Branding from "./Branding";
 import ThemeTgl from "./ThemeTgl";
 import { useAuth } from "@hooks/useAuth";
 import Avatar from "./Avatar";
-import Button from "./Button";
+import Button from "@components/UI/Button";
+
 import { useNavigate, useLocation } from "react-router-dom";
 
 function Navbar() {
