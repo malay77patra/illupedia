@@ -1,5 +1,3 @@
-const sanitizeUser = require("./sanitizeUser");
-
 
 function getJwtFormat(ms) {
     if (ms < 1000) throw new Error("Expiration time must be at least 1 second.");
@@ -15,4 +13,4 @@ function getJwtFormat(ms) {
 
 
 
-module.exports = { getJwtFormat, sanitizeUser };
+module.exports = { getJwtFormat };

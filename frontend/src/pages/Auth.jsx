@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { useAuth } from "@hooks/useAuth";
-import axios from "axios";
+import { useApi } from "@hooks/useApi";
 import Button from "@components/Button";
 import toast from "react-hot-toast";
 
 function Auth() {
-    const { setUser } = useAuth();
+    const api = useApi();
+    const { setAuthToken } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [isLogin, setIsLogin] = useState(true);
-    const [confirmPassword, setConfirmPassword] = useState("");
 
     const handleSubmit = async () => {
         const trimmedEmail = email.trim();
@@ -29,27 +30,26 @@ function Auth() {
         setLoading(true);
 
         try {
-            const endpoint = isLogin ? "login" : "register";
+            const endpoint = isLogin ? "/user/login" : "/user/register";
             const payload = { email: trimmedEmail, password: trimmedPassword };
 
-            const response = await axios.post(
-                `${import.meta.env.VITE_SERVER_URL}/api/user/${endpoint}`,
-                payload,
-                { withCredentials: true }
-            );
+            const response = await api.post(endpoint, payload);
 
-            setUser(response.data.user);
-            toast.success(isLogin ? "Login successful!" : "Registration successful!");
+            const token = response?.accessToken;
+
+            if (token) {
+                setAuthToken(token);
+                toast.success(isLogin ? "Login successful!" : "Registration successful!");
+            } else {
+                toast.error("No token received.");
+            }
 
             setIsLogin(true);
         } catch (error) {
-            if (error.response) {
-                toast.error(error.response.data.message ||
-                    (isLogin ? "Invalid email or password" : "Registration failed"));
-            } else {
-                console.log("Error:", error);
-                toast.error("Network error, please try again!");
-            }
+            toast.error(
+                error?.message || (isLogin ? "Invalid email or password" : "Registration failed")
+            );
+            console.error("Error:", error);
         } finally {
             setLoading(false);
         }
@@ -63,54 +63,52 @@ function Auth() {
     };
 
     return (
-        <>
-            <div className="max-w-sm mx-auto mt-10 p-5 border rounded-lg shadow-md">
-                <h2 className="text-xl font-bold mb-4">{isLogin ? "Login" : "Register"}</h2>
+        <div className="max-w-sm mx-auto mt-10 p-5 border rounded-lg shadow-md">
+            <h2 className="text-xl font-bold mb-4">{isLogin ? "Login" : "Register"}</h2>
 
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full p-2 mb-2 border rounded"
-                    disabled={loading}
-                />
+            <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full p-2 mb-2 border rounded"
+                disabled={loading}
+            />
 
+            <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full p-2 mb-2 border rounded"
+                disabled={loading}
+            />
+
+            {!isLogin && (
                 <input
                     type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     className="w-full p-2 mb-2 border rounded"
                     disabled={loading}
                 />
+            )}
 
-                {!isLogin && (
-                    <input
-                        type="password"
-                        placeholder="Confirm Password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="w-full p-2 mb-2 border rounded"
-                        disabled={loading}
-                    />
-                )}
+            <Button onClick={handleSubmit} disabled={loading} fullwidth>
+                {loading ? (isLogin ? "Logging in..." : "Registering...") : (isLogin ? "Login" : "Register")}
+            </Button>
 
-                <Button onClick={handleSubmit} disabled={loading} fullwidth>
-                    {loading ? (isLogin ? "Logging in..." : "Registering...") : (isLogin ? "Login" : "Register")}
-                </Button>
-
-                <div className="mt-4 text-center">
-                    <button
-                        onClick={toggleAuthMode}
-                        className="text-blue-500 hover:underline"
-                        disabled={loading}
-                    >
-                        {isLogin ? "Need an account? Register" : "Already have an account? Login"}
-                    </button>
-                </div>
+            <div className="mt-4 text-center">
+                <button
+                    onClick={toggleAuthMode}
+                    className="text-blue-500 hover:underline"
+                    disabled={loading}
+                >
+                    {isLogin ? "Need an account? Register" : "Already have an account? Login"}
+                </button>
             </div>
-        </>
+        </div>
     );
 }
 

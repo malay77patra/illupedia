@@ -2,11 +2,9 @@ import { useCallback } from "react";
 import axios from "axios";
 import { useAuth } from "./useAuth";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
-
 
 const useApi = () => {
-    const { user, setUser } = useAuth();
+    const { authToken, setAuthToken } = useAuth();
     const navigate = useNavigate();
 
     const api = axios.create({
@@ -22,9 +20,12 @@ const useApi = () => {
 
             refreshPromise = api.post("/user/refresh", {}, { withCredentials: true })
                 .then((res) => {
-                    if (res.data.user) setUser(res.data.user);
+                    const newToken = res.data?.accessToken;
+                    if (newToken) {
+                        setAuthToken(newToken);
+                    }
                     isRefreshing = false;
-                    return res.data.accessToken;
+                    return newToken;
                 })
                 .catch(() => {
                     isRefreshing = false;
@@ -36,18 +37,14 @@ const useApi = () => {
     };
 
     api.interceptors.request.use((config) => {
-        if (user?.accessToken) {
-            config.headers.Authorization = `Bearer ${user.accessToken}`;
+        if (authToken) {
+            config.headers.Authorization = `Bearer ${authToken}`;
         }
         return config;
     });
 
     api.interceptors.response.use(
-        (response) => {
-            if (response.data?.user) setUser(response.data.user);
-            if (response.data?.message) toast.success(response.data.message);
-            return response;
-        },
+        (response) => response,
         async (error) => {
             const originalRequest = error.config;
 
@@ -56,8 +53,10 @@ const useApi = () => {
 
                 try {
                     const newToken = await refreshToken();
-                    originalRequest.headers.Authorization = `Bearer ${newToken}`;
-                    return api(originalRequest);
+                    if (newToken) {
+                        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                        return api(originalRequest);
+                    }
                 } catch {
                     navigate("/login");
                     throw new Error("Redirecting to login");
@@ -71,12 +70,9 @@ const useApi = () => {
     const request = useCallback(
         async (method, url, data = null, config = {}) => {
             const response = await api({ method, url, data, ...config });
-
-            if (response.data?.message) toast.success(response.data.message);
-
             return response.data;
         },
-        [user, setUser, navigate]
+        [authToken, navigate, setAuthToken]
     );
 
     return {

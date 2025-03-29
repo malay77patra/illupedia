@@ -3,7 +3,7 @@ function Home() {
 
   return (
     <>
-      Welcome to Illupedia!
+      Welcome to Flamecoders!
     </>
   );
 }

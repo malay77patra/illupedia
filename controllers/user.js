@@ -1,7 +1,6 @@
 const User = require("@models/user");
 const jwt = require("jsonwebtoken");
 const { REFRESH_TOKEN_OPTIONS } = require("@config");
-const { sanitizeUser } = require("@utils");
 
 const registerUser = async (req, res) => {
     const { email, password } = req.body;
@@ -54,7 +53,7 @@ const loginUser = async (req, res) => {
         return res
             .status(200)
             .cookie("refreshToken", refreshToken, REFRESH_TOKEN_OPTIONS)
-            .json({ user: { accessToken, ...sanitizeUser(user) }, message: "Logged in successfully." });
+            .json({ accessToken, message: "Logged in successfully." });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: "Something went wrong, please try again later." });
@@ -111,7 +110,7 @@ const refreshUser = async (req, res) => {
         await User.findByIdAndUpdate(user._id, { accessToken }, { new: true });
 
         return res.status(200).json({
-            user: { accessToken, ...sanitizeUser(user) },
+            user: { accessToken },
             message: "Access token refreshed successfully."
         });
 
