@@ -15,6 +15,10 @@ const isProduction = process.argv.includes('--env=production');
 const app = express();
 const PORT = process.env.PORT || 8000;
 
+// Settings
+app.set('view engine', 'ejs');
+app.set('views', './views');
+
 // Using middlewares
 app.use(cors({
     origin: process.env.CLIENT_URL,
@@ -26,8 +30,8 @@ app.use(cookieParser());
 app.use(routes);
 
 // Test route
-app.get("/", (req, res) => {
-    res.status(200).send("Server Online!");
+app.get('/', (req, res) => {
+    res.send("Server Online!");
 });
 
 

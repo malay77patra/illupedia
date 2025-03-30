@@ -1,11 +1,18 @@
 const User = require("@models/user");
 const Pending = require("@models/pending");
+
 const jwt = require("jsonwebtoken");
 const { getJwtFormat } = require("@utils");
 const { sendEmail } = require("@utils/smtp");
-const { REFRESH_TOKEN_OPTIONS } = require("@config");
 const { loginSchema, registerSchema } = require("@utils/validations");
-const { SMALL_COOL_DOWN, BIG_COOL_DOWN, MAX_MAGIC_LINK_AGE, MAGIC_LINK_VERIFICATION_ENDPOINT } = require("@config");
+const {
+    SMALL_COOL_DOWN,
+    BIG_COOL_DOWN,
+    MAX_MAGIC_LINK_AGE,
+    MAGIC_LINK_VERIFICATION_ENDPOINT,
+    MAX_REGISTRATION_TRIES,
+    REFRESH_TOKEN_OPTIONS
+} = require("@config");
 
 const registerUser = async (req, res) => {
     try {
@@ -16,7 +23,7 @@ const registerUser = async (req, res) => {
         const createMagicLink = () => {
             const magicToken = jwt.sign(
                 { name, email, password },
-                process.env.ACCESS_TOKEN_SECRET,
+                process.env.MAGIC_SECRET,
                 { expiresIn: getJwtFormat(MAX_MAGIC_LINK_AGE) }
             );
 
@@ -40,7 +47,7 @@ const registerUser = async (req, res) => {
             const pending = await Pending.findOne({ email });
 
             if (pending) {
-                if (pending.attempts >= 3) {
+                if (pending.attempts >= MAX_REGISTRATION_TRIES) {
                     if (pending.attemptAt > bigCoolDown) {
                         return { status: 429, message: "Too many attempts. Try again later." };
                     }

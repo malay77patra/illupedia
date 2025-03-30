@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
 const dotenv = require("dotenv");
+const { BRANDING } = require("@config");
 
 dotenv.config();
 
@@ -15,7 +16,7 @@ const transporter = nodemailer.createTransport({
 
 const sendEmail = async (to, subject, text, html) => {
     const mailOptions = {
-        from: process.env.MAILER_FROM,
+        from: `"${BRANDING.name}" ${process.env.MAILER_FROM}`,
         to: to,
         subject: subject,
         text: text,
