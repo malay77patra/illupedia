@@ -1,7 +1,11 @@
 const User = require("@models/user");
+const Pending = require("@models/pending");
 const jwt = require("jsonwebtoken");
+const { getJwtFormat } = require("@utils");
+const { sendEmail } = require("@utils/smtp");
 const { REFRESH_TOKEN_OPTIONS } = require("@config");
 const { loginSchema, registerSchema } = require("@utils/validations");
+const { SMALL_COOL_DOWN, BIG_COOL_DOWN, MAX_MAGIC_LINK_AGE, MAGIC_LINK_VERIFICATION_ENDPOINT } = require("@config");
 
 const registerUser = async (req, res) => {
     try {
@@ -9,40 +13,82 @@ const registerUser = async (req, res) => {
 
         const { name, email, password } = req.body;
 
-        const existingUser = await User.findOne({ email }).lean();
+        const createMagicLink = () => {
+            const magicToken = jwt.sign(
+                { name, email, password },
+                process.env.ACCESS_TOKEN_SECRET,
+                { expiresIn: getJwtFormat(MAX_MAGIC_LINK_AGE) }
+            );
 
-        if (existingUser) {
-            return res.status(400).json({
-                error: {
-                    message: "This email is already in use."
+            return `${req.protocol}://${req.get("host")}${MAGIC_LINK_VERIFICATION_ENDPOINT}?token=${magicToken}`;
+        };
+
+        const sendMagicLink = async () => {
+            const magicLink = createMagicLink();
+            const subject = "Magic Link for Registration";
+            const text = `Click the link to register: ${magicLink}`;
+            const html = `<p>Click the link to register:</p><a href="${magicLink}">Register</a>`;
+
+            await sendEmail(email, subject, text, html);
+        };
+
+        const handlePendingRegistration = async () => {
+            const now = new Date();
+            const bigCoolDown = new Date(now.getTime() - BIG_COOL_DOWN);
+            const smallCoolDown = new Date(now.getTime() - SMALL_COOL_DOWN);
+
+            const pending = await Pending.findOne({ email });
+
+            if (pending) {
+                if (pending.attempts >= 3) {
+                    if (pending.attemptAt > bigCoolDown) {
+                        return { status: 429, message: "Too many attempts. Try again later." };
+                    }
+                    pending.attempts = 1;
+                } else if (pending.attemptAt > smallCoolDown) {
+                    return { status: 429, message: "Please wait before trying again." };
+                } else {
+                    pending.attempts += 1;
                 }
-            });
+
+                pending.attemptAt = now;
+                await pending.save();
+            } else {
+                await Pending.create({ email, attempts: 1, attemptAt: now });
+            }
+
+            return { status: 200 };
+        };
+
+        const existingUser = await User.findOne({ email }).lean();
+        if (existingUser) {
+            return res.status(400).json({ error: { message: "This email is already in use." } });
         }
 
-        await User.create({ name, email, password });
+        const pendingResult = await handlePendingRegistration();
 
-        return res.status(201).json({
-            success: {
-                message: "User registered successfully."
-            }
+        if (pendingResult.status !== 200) {
+            return res.status(pendingResult.status).json({ error: { message: pendingResult.message } });
+        }
+
+        await sendMagicLink();
+
+        return res.status(200).json({
+            success: { message: "Verification link has been sent to your email. Please check your inbox." }
         });
 
     } catch (error) {
         if (error.name === "ValidationError") {
-            return res.status(400).json({
-                error: {
-                    message: error.inner[0]?.message || "Validation failed."
-                }
-            });
+            return res.status(400).json({ error: { message: error.inner[0]?.message || "Validation failed." } });
         }
-
+        console.error("Error in registerUser:", error);
         return res.status(500).json({
-            error: {
-                message: "An unexpected error occurred. Please try again later."
-            }
+            error: { message: "An unexpected error occurred. Please try again later." }
         });
     }
 };
+
+
 
 const loginUser = async (req, res) => {
     try {
